@@ -30,7 +30,15 @@ def get_user_words() -> List[str]:
     Gets words from user input and returns a list with these words.
     Usage: enter a word or press ctrl+d to finish.
     """
-    pass
+    # words = sys.stdin.readlines()
+    # return words
+    words = []
+    for word in input().split():
+        if word not in words:
+            words.append(word)
+    return words
+
+print(get_user_words())
 
 def get_pure_user_words(user_words: List[str], letters: List[str], words_from_dict: List[str]) -> List[str]:
     """
