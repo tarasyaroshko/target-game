@@ -17,28 +17,63 @@ def generate_grid() -> List[List[str]]:
             grid[i].append(random.choice(string.ascii_uppercase))
     return grid
 
+def letter_count(word):
+    """
+    Checks if each letter is used only once
+    Returns tuple consisting of letter name and
+    the amount of times it occurs in line
+    """
+    tup_letter_count = []
+    word = word.lower()
+    for i in range(len(word)):
+        if i == 0:
+            tup_letter_count.append((word[i], word.count(word[i])))
+        elif word[i] not in word[:i] and i != 0:
+            tup_letter_count.append((word[i], word.count(word[i])))
+    counter = 0
+    for i in range(len(tup_letter_count)):
+        if tup_letter_count[i][1] == True:
+            counter += 1
+    if counter == len(tup_letter_count):
+        return True
+    return False
+
+
+
 def get_words(f: str, letters: List[str]) -> List[str]:
     """
     Reads the file f. Checks the words with rules and returns a list of words.
     """
-    pass
-
-
+    with open(f, "r") as file:
+        words = []
+        for line in file:
+            line = line.lower().replace("\n", "")
+            if word_rule_check(line, letters):
+                words.append(line)
+    return words
 
 def get_user_words() -> List[str]:
     """
     Gets words from user input and returns a list with these words.
     Usage: enter a word or press ctrl+d to finish.
     """
-    # words = sys.stdin.readlines()
-    # return words
     words = []
-    for word in input().split():
-        if word not in words:
+    for word in sys.stdin.readlines():
+        if word.islower() and word not in words:
             words.append(word)
     return words
 
-print(get_user_words())
+def word_rule_check(line, letters):
+    if len(line) >= 4 and letters[4] in line:
+                lst = list(line)
+                counter = 0
+                for i in range(len(lst)):
+                    if lst[i] in letters:
+                        counter += 1
+                        if counter == len(lst):
+                            if letter_count(line):
+                                return True
+
 
 def get_pure_user_words(user_words: List[str], letters: List[str], words_from_dict: List[str]) -> List[str]:
     """
@@ -47,8 +82,43 @@ def get_pure_user_words(user_words: List[str], letters: List[str], words_from_di
     Checks user words with the rules and returns list of those words
     that are not in dictionary.
     """
-    pass
+    # required_letter = letters[4]
+    # pure_user_words = []
+    # for word in user_words:
+    #     if (required_letter in word) and (len(word) >= 4):
+    #         counter = 0
+    #         for char in word:
+    #             counter += 1
+    #             if char not in letters:
+    #                 break
+    #             elif counter == len(word) - 1:
+    #                 words.append(word)
+    pure_user_words = []
+    for word in user_words:
+        if word_rule_check(word) and word not in words_from_dict:
+            pure_user_words.append(word)
+    return pure_user_words
 
 
 def results():
-    pass
+    letters = generate_grid()
+    letters = letters[0] + letters[1] + letters[2]
+    right_words = 0
+    dict_words = get_words("en", letters)
+    user_words = get_user_words()
+    wrong_words = get_pure_user_words(user_words, dict_words)
+
+    for word in user_words:
+        if word in dict_words:
+            right_words += 1
+            dict_words.remove(word)
+    print("Number of right words: " + right_words)
+    print("Words you did not guess: " + dict_words)
+    print("Wrong words: " + wrong_words)
+
+    with open("results.txt", "w", encoding='utf-8') as result:
+        result.write(str(right_words) + '\n')
+        result.write('\n'.join(dict_words))
+        result.write('\n'.join(wrong_words  ))
+if __name__ == "__main__":
+    results()
