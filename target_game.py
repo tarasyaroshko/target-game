@@ -1,3 +1,6 @@
+"""
+TARGET GAME MODULE
+"""
 from typing import List
 
 def generate_grid() -> List[List[str]]:
