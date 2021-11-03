@@ -103,22 +103,24 @@ def get_pure_user_words(user_words: List[str], letters: List[str], words_from_di
 def results():
     letters = generate_grid()
     letters = letters[0] + letters[1] + letters[2]
-    right_words = 0
+    right_words = []
+    right_words_count = 0
     dict_words = get_words("en", letters)
     user_words = get_user_words()
     wrong_words = get_pure_user_words(user_words, dict_words)
 
     for word in user_words:
         if word in dict_words:
-            right_words += 1
+            right_words_count += 1
+            right_words.append(word)
             dict_words.remove(word)
-    print("Number of right words: " + right_words)
+    print("Number of right words: " + right_words_count)
     print("Words you did not guess: " + dict_words)
     print("Wrong words: " + wrong_words)
 
-    with open("results.txt", "w", encoding='utf-8') as result:
-        result.write(str(right_words) + '\n')
+    with open("results.txt", "w", encoding='UTF-8') as result:
+        result.write(str(right_words_count) + '\n')
         result.write('\n'.join(dict_words))
-        result.write('\n'.join(wrong_words  ))
+        result.write('\n'.join(wrong_words))
 if __name__ == "__main__":
     results()
