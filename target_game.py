@@ -19,7 +19,6 @@ def generate_grid() -> List[List[str]]:
 
 def letter_count(word, letters):
     """
-    Checks if each letter is used only once
     Returns tuple consisting of letter name and
     the amount of times it occurs in line
     """
@@ -32,45 +31,43 @@ def letter_count(word, letters):
             tup_letter_count.append((word[i], word.count(word[i])))
     # counter = 0
     for i in range(len(tup_letter_count)):
-        if tup_letter_count[i][1] <= letters.count(tup_letter_count[i][0]):
+        if tup_letter_count[i][1] > letters.count(tup_letter_count[i][0]):
+            return False
     #         counter += 1
     # if counter == len(tup_letter_count):
-            return True
-        return False
-
+    return True
+# print(letter_count("aaron", [el for el in 'jniarnoah']))
 def get_words(filename: str, letters: List[str]) -> List[str]:
     """
     Reads the file f. Checks the words with rules and returns a list of words.
     """
     with open(filename, "r") as file:
         words = []
-        if len(letters) == 9:
-            for line in file:
-                line = line.lower().replace("\n", "")
-                if (len(line) >= 4) and (len(line) <= 9) and letters[4] in line:
-                    lst = list(line)
-                    counter = 0
-                    for i in range(len(lst)):
-                        if lst[i] in letters:
-                            counter += 1
-                            if counter == len(lst):
-                                if letter_count(line,letters) == True:
-                                    words.append(line)
-        else:
-            for line in file:
-                letters_new = list(letters[0])
-                line = line.lower().replace("\n", "")
-                if len(line) >= 4 and len(line) <= 9 and letters_new[4] in line:
-                    lst = list(line)
-                    counter = 0
-                    for i in range(len(lst)):
-                        if lst[i] in letters_new:
-                            counter += 1
-                            if counter == len(lst):
-                                if letter_count(line,letters) == True:
-                                    words.append(line)
+        # if len(letters) == 9:
+        for line in file:
+            word = line.lower().replace("\n", "")
+            if (len(word) >= 4) and (len(word) <= 9) and letters[4] in word:
+                # lst = list(word)
+                # for i in range(len(lst)):
+                    # if lst[i] in letters:
+                    #     counter += 1
+                    #     if counter == len(lst):
+                if letter_count(word,letters) == True:
+                    words.append(word)
+        # else:
+        #     for line in file:
+        #         letters_new = list(letters[0])
+        #         line = line.lower().replace("\n", "")
+        #         if len(line) >= 4 and len(line) <= 9 and letters_new[4] in line:
+        #             lst = list(line)
+        #             counter = 0
+        #             for i in range(len(lst)):
+        #                 if lst[i] in letters_new:
+        #                     counter += 1
+        #                     if counter == len(lst):
+        #                         if letter_count(line,letters):
+        #                             words.append(line)
     return words
-print(len(get_words('en', [el for el in 'jniarnoah'])))
 
 def get_user_words() -> List[str]:
     """
@@ -93,6 +90,7 @@ def word_rule_check(line, letters):
                 if counter == len(lst):
                     if letter_count(line):
                         return True
+                    return False
 
 
 def get_pure_user_words(user_words: List[str], letters: List[str], words_from_dict: List[str]) -> List[str]:
