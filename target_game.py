@@ -81,6 +81,9 @@ def get_user_words() -> List[str]:
     return words
 
 def word_rule_check(line, letters):
+    """
+    Check if the word corresponds to the rules
+    """
     if len(line) >= 4 and letters[4] in line:
         lst = list(line)
         counter = 0
@@ -88,12 +91,13 @@ def word_rule_check(line, letters):
             if lst[i] in letters:
                 counter += 1
                 if counter == len(lst):
-                    if letter_count(line):
+                    if letter_count(line,letters):
                         return True
                     return False
 
 
-def get_pure_user_words(user_words: List[str], letters: List[str], words_from_dict: List[str]) -> List[str]:
+def get_pure_user_words(user_words: List[str], letters: List[str],\
+                        words_from_dict: List[str]) -> List[str]:
     """
     (list, list, list) -> list
 
@@ -119,6 +123,10 @@ def get_pure_user_words(user_words: List[str], letters: List[str], words_from_di
 
 
 def results():
+    """
+    Final function
+    Writes results in the results.txt file
+    """
     letters = generate_grid()
     letters = letters[0] + letters[1] + letters[2]
     right_words = []
