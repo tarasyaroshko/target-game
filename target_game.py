@@ -13,7 +13,7 @@ def generate_grid() -> List[List[str]]:
     """
     grid = [[],[],[]]
     for i in range(len(grid)):
-        for j in range(len(grid)):
+        for _ in range(len(grid)):
             grid[i].append(random.choice(string.ascii_uppercase))
     return grid
 
@@ -40,17 +40,38 @@ def letter_count(word):
 
 
 
-def get_words(f: str, letters: List[str]) -> List[str]:
+def get_words(filename: str, letters: List[str]) -> List[str]:
     """
     Reads the file f. Checks the words with rules and returns a list of words.
     """
-    with open(f, "r") as file:
+    with open(filename, "r") as file:
         words = []
-        for line in file:
-            line = line.lower().replace("\n", "")
-            if word_rule_check(line, letters):
-                words.append(line)
-    return words
+        if len(letters) == 9:
+            for line in file:
+                line = line.lower().replace("\n", "")
+                if (len(line) >= 4) and (len(line) <= 9) and letters[4] in line:
+                    lst = list(line)
+                    counter = 0
+                    for i in range(len(lst)):
+                        if lst[i] in letters:
+                            counter += 1
+                            if counter == len(lst):
+                                if letter_count(line) == True:
+                                    words.append(line)
+        else:
+            for line in file:
+                letters_new = list(letters[0])
+                line = line.lower().replace("\n", "")
+                if len(line) >= 4 and len(line) <= 9 and letters_new[4] in line:
+                    lst = list(line)
+                    counter = 0
+                    for i in range(len(lst)):
+                        if lst[i] in letters_new:
+                            counter += 1
+                            if counter == len(lst):
+                                if letter_count(line) == True:
+                                    words.append(line)
+    return len(words)
 
 def get_user_words() -> List[str]:
     """
@@ -65,14 +86,14 @@ def get_user_words() -> List[str]:
 
 def word_rule_check(line, letters):
     if len(line) >= 4 and letters[4] in line:
-                lst = list(line)
-                counter = 0
-                for i in range(len(lst)):
-                    if lst[i] in letters:
-                        counter += 1
-                        if counter == len(lst):
-                            if letter_count(line):
-                                return True
+        lst = list(line)
+        counter = 0
+        for i in range(len(lst)):
+            if lst[i] in letters:
+                counter += 1
+                if counter == len(lst):
+                    if letter_count(line):
+                        return True
 
 
 def get_pure_user_words(user_words: List[str], letters: List[str], words_from_dict: List[str]) -> List[str]:
@@ -95,7 +116,7 @@ def get_pure_user_words(user_words: List[str], letters: List[str], words_from_di
     #                 words.append(word)
     pure_user_words = []
     for word in user_words:
-        if word_rule_check(word) and word not in words_from_dict:
+        if word_rule_check(word,letters) and word not in words_from_dict:
             pure_user_words.append(word)
     return pure_user_words
 
@@ -107,7 +128,7 @@ def results():
     right_words_count = 0
     dict_words = get_words("en", letters)
     user_words = get_user_words()
-    wrong_words = get_pure_user_words(user_words, dict_words)
+    wrong_words = get_pure_user_words(user_words, letters, dict_words)
 
     for word in user_words:
         if word in dict_words:
