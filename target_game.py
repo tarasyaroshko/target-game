@@ -17,7 +17,7 @@ def generate_grid() -> List[List[str]]:
             grid[i].append(random.choice(string.ascii_uppercase))
     return grid
 
-def letter_count(word):
+def letter_count(word, letters):
     """
     Checks if each letter is used only once
     Returns tuple consisting of letter name and
@@ -30,15 +30,13 @@ def letter_count(word):
             tup_letter_count.append((word[i], word.count(word[i])))
         elif word[i] not in word[:i] and i != 0:
             tup_letter_count.append((word[i], word.count(word[i])))
-    counter = 0
+    # counter = 0
     for i in range(len(tup_letter_count)):
-        if tup_letter_count[i][1] == True:
-            counter += 1
-    if counter == len(tup_letter_count):
-        return True
-    return False
-
-
+        if tup_letter_count[i][1] <= letters.count(tup_letter_count[i][0]):
+    #         counter += 1
+    # if counter == len(tup_letter_count):
+            return True
+        return False
 
 def get_words(filename: str, letters: List[str]) -> List[str]:
     """
@@ -56,7 +54,7 @@ def get_words(filename: str, letters: List[str]) -> List[str]:
                         if lst[i] in letters:
                             counter += 1
                             if counter == len(lst):
-                                if letter_count(line) == True:
+                                if letter_count(line,letters) == True:
                                     words.append(line)
         else:
             for line in file:
@@ -69,9 +67,10 @@ def get_words(filename: str, letters: List[str]) -> List[str]:
                         if lst[i] in letters_new:
                             counter += 1
                             if counter == len(lst):
-                                if letter_count(line) == True:
+                                if letter_count(line,letters) == True:
                                     words.append(line)
-    return len(words)
+    return words
+print(len(get_words('en', [el for el in 'jniarnoah'])))
 
 def get_user_words() -> List[str]:
     """
